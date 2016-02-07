@@ -29,9 +29,7 @@ class Data:
                     self.names.append(attribute)
                     self.variables[attribute] = tokens[2].strip("{ }").split(', ')
             else: # data lines
-                self.data.append(line.split(','))
-
-        
+                self.data.append(line.split(','))        
 
     ##
     # Get the number of variables in this data set.
@@ -59,7 +57,6 @@ class Data:
                     i += 1
         return indicies
 
-
     ##
     # Count the number of instances where given set of variables having a 
     # given set of values.
@@ -75,6 +72,7 @@ class Data:
             if x == v:
                 count += 1
         return count
+
 
 if __name__ == '__main__':
     # test code

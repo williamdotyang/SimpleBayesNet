@@ -65,8 +65,21 @@ class Data:
     # given set of values.
     # @param X  A list of names of selected variables.
     # @param v  A list of values for each of the variables.
-    # @return An int, the count of instances in data where X=v.
-    def countInstances(self, X, v):
-        pass
-        
+    # @return An int, the count of instances in data where X=v.)
 
+    def countInstances(self, X, v):
+        cols = self.getColIndex(X)
+        count = 0
+        for line in self.data:
+            x = [line[i] for i in cols]
+            if x == v:
+                count += 1
+        return count
+
+if __name__ == '__main__':
+    # test code
+    lym_train = Data('../data/lymph_train.arff')
+    lym_train.parse()
+    print lym_train.filename + ' has ' + str(lym_train.getNumNames()) + ' variables; ' + \
+        str(lym_train.getNumInstances()) + ' instances.'
+    print 'it has ' + str(lym_train.countInstances(['class'], ['malign_lymph'])) + ' cases of malign_lymph.'

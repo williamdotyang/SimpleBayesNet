@@ -83,6 +83,18 @@ class Graph:
         toNode.removeParent(frmNode)
         return True
 
+    ## set the value of edge weight
+    # @param frm  Name of node that strat from
+    # @param to  Name of node that end to
+    # @param weight  New weight of this edge
+    # @return true if set, false if failed
+    def setEdgeWeight(self, frm, to, weight):
+        if self.removeEdge(frm, to):
+            self.addEdge(frm, to, weight)
+            return True
+        else:
+            return False
+
 
 if __name__ == '__main__':
     # test code
@@ -98,8 +110,13 @@ if __name__ == '__main__':
     for n in g:
         print n
 
-    print '---------removing--------\n'
+    print '---------removing--------'
     g.removeEdge('Y', 'X3')
     g.removeNode('X2')
+    for n in g:
+        print n
+
+    print '---------resetting edge weight--------'
+    g.setEdgeWeight('Y', 'X1', 5)
     for n in g:
         print n

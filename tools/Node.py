@@ -9,14 +9,14 @@ class Node:
     # @param name  A string representing the name of the node
     def __init__(self, name):
         self.__id = name
-        self.__parents = {} # this node's parent nodes
-        self.__children = {} # this node's children nodes
+        self.__parents = {} # this node's parent nodes {node: weight}
+        self.__children = {} # this node's children nodes {node: weight}
 
     ## overrided string representation about this node
     def __str__(self):
-        return str(self.__id) + 
-            ' parents: ' + str([x.__id for x in self.__parents]) +
-            ' children: ' + str([x.__id for x in self.__children])
+        return str(self.__id) + \
+        ' parents:' + str([(x.__id, self.__parents[x]) for x in self.__parents]) + \
+        ' children:' + str([(x.__id, self.__children[x]) for x in self.__children])
 
     ## add parent node to this node
     # @param parent  Parent node
@@ -24,11 +24,21 @@ class Node:
     def addParent(self, parent, weight=0):
         self.__parents[parent] = weight
 
+    ## remove a parent node of this node
+    # @param parent  Parent node
+    def removeParent(self, parent):
+        del self.__parents[parent]
+
     ## add child node to this node
     # @param child  Child node
     # @param weight Weight of edge between this node and child
     def addChild(self, child, weight=0):
         self.__children[child] = weight
+
+    ## remove a child node of this node
+    # @param child  Child node
+    def removeChild(self, child):
+        del self.__children[child]
 
     ## getter func for __id
     def getId(self):

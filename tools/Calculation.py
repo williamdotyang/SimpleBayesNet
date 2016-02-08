@@ -25,7 +25,7 @@ def prod(iterable):
 # @param v  A list of values for each of the variables.
 # @param m  Laplace pseudocount
 # @return A double, probability of P(X=v)
-def calcProb(data, X, v, m = 0):
+def calcProb(data, X, v, m = 1):
     numerator = data.countInstances(X, v) + m
     # a list of number of values in each variable in X
     numValues = [len(data.variables[name]) for name in X]
@@ -43,7 +43,7 @@ def calcProb(data, X, v, m = 0):
 # @param y  A list of values for each of the variables in Y.
 # @param m  Laplace pseudocount
 # @return A double, probability of P(X=v|Y=y)
-def calcCondProb(data, X, v, Y, y, m = 0):
+def calcCondProb(data, X, v, Y, y, m = 1):
     numerator = calcProb(data, X + Y, v + y, m)
     denominator = calcProb(data, Y, y, m)
     return numerator / denominator
@@ -55,7 +55,7 @@ def calcCondProb(data, X, v, Y, y, m = 0):
 # @param Xj  A name of variable. 
 # @param m  Laplace pseudocount
 # @return A double, mutual information of I(Xi,Xj)
-def calcMI(data, Xi, Xj, m = 0):
+def calcMI(data, Xi, Xj, m = 1):
     vals_i = data.variables[Xi]
     vals_j = data.variables[Xj]
     MI = 0
@@ -75,7 +75,7 @@ def calcMI(data, Xi, Xj, m = 0):
 # @param Y  A name of variable. 
 # @param m  Laplace pseudocount
 # @return A double, mutual information of I(Xi,Xj|Y)
-def calcCondMI(data, Xi, Xj, Y, m = 0):
+def calcCondMI(data, Xi, Xj, Y, m = 1):
     vals_i = data.variables[Xi]
     vals_j = data.variables[Xj]
     vals_y = data.variables[Y]

@@ -14,8 +14,7 @@ class BayesNet:
     def __init__(self):
         self.train = None
         self.test = None
-        self.graph
-        pass
+        self.graph = Graph()
 
     ##
     # Load the training dataset.
@@ -31,24 +30,42 @@ class BayesNet:
         self.test = Data(testFilename)
         self.test.parse()
 
+    ## 
+    # Build the graph structure of Naive Bayes
+    def buildNaiveBayes(self):
+        for name in self.train.names:
+            self.graph.addNode(name)
+        nodes = self.graph.getNodes()
+        for node in nodes:
+            if node != 'class':
+                self.graph.addEdge('class', node)
+
+    ##
+    # Build the graph structure of TAN
+    def buildTAN(self):
+        pass
+
     ##
     # Given the values of attributes of a testing instance, predict its class.
-    # @param x  A list of instance variable values, including the 'class' at the end.
+    # @param instanceVars  A list of instance variable values, including the 'class' at the end.
     # @return (predicted class value, actual class value, posterior prob of predicted value)
-    def predictOneInstance(self, x):
+    def predictOneInstance(self, instanceVars):
         names = self.train.names # including the 'class'
         posteriors = []
-        for y in self.train.variables['class']:
+        for y in self.train.variables[response]:
             # give the actual posterior porbability in the output
-            true_y = x[-1]
-            pred_p = calcProb(names, x[:-1] + [y]) / calcProb(X = names[:-1], v = x[:-1])
+            true_y = instanceVars[-1]
+            Py = calcProb(self.train, ['class'], [y])
+            Px = calcProb(self.train, names[:-1], instanceVars[:-1])
+            Pxi_parents = calcProbsCondParents(self.train, instanceVars[:-1])
+            Px-y = prod(Pxi_parents)
+            pred_p = Py * Px-y / Px
             posteriors.append((y, true_y, pred_p))
         return sorted(posteriors, key = lambda x: -x[-1])[0]
 
-
     ##
     # Predict the class in all instances in testing dataset.
-    # @return A list of predicted class values for instances in testing set.
+    # @return A list of predicted result for instances in testing set.
     def predictTestData(self):
         results = []
         for instance in self.test.data:

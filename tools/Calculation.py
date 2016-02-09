@@ -44,15 +44,16 @@ def calcProb(data, X, v, m = 1):
 # @param m  Laplace pseudocount
 # @return A double, probability of P(X=v|Y=y)
 def calcCondProb(data, X, v, Y, y, m = 1):
-    numerator = calcProb(data, X + Y, v + y, m)
-    denominator = calcProb(data, Y, y, m)
+    numerator = data.countInstances(X + Y, v + y) + m
+    denominator = data.countInstances(Y, y) + \
+        m * sum([len(data.variables[x]) for x in X])
     return numerator / denominator
 
 ##
 # Calculates the conditional probability of each observed attribute variable given its parent nodes.
 # @param data  A Data object defined in Data class.
 # @param X  A list of variables. Must be discrete.
-# @param v  A list of values for each of the variables in X.
+# @param x  A list of values for each of the variables in X, and value of Y.
 # @param graph  A graph structure describing the dependency relation among variables in X.
 # @return Prodcut of P(X_i = x_i | Pa(xi)), for X_i in X
 def calcProbsCondParents(data, X, x, graph):
@@ -64,6 +65,7 @@ def calcProbsCondParents(data, X, x, graph):
         parentValues = [x[i] for i in data.getColIndex(parentNames)]
         Xvalue = [x[i] for i in data.getColIndex([name])]
         condProb = calcCondProb(data, [name], Xvalue, parentNames, parentValues)
+        #print name, Xvalue, parentNames, parentValues, condProb
         results.append(condProb)
     return prod(results)
 

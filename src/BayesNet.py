@@ -47,17 +47,17 @@ class BayesNet:
 
     ##
     # Given the values of attributes of a testing instance, predict its class.
-    # @param instanceVars  A list of instance variable values, including the 'class' at the end.
+    # @param instanceVals  A list of instance variable values, including the 'class' at the end.
     # @return (predicted class value, actual class value, posterior prob of predicted value)
-    def predictOneInstance(self, instanceVars):
+    def predictOneInstance(self, instanceVals):
         names = self.train.names # including the 'class'
         posteriors = []
         for y in self.train.variables[response]:
             # give the actual posterior porbability in the output
-            true_y = instanceVars[-1]
+            true_y = instanceVals[-1]
             Py = calcProb(self.train, ['class'], [y])
-            Px = calcProb(self.train, names[:-1], instanceVars[:-1])
-            Pxi_parents = calcProbsCondParents(self.train, instanceVars[:-1])
+            Px = calcProb(self.train, names[:-1], instanceVals[:-1])
+            Pxi_parents = calcProbsCondParents(self.train, names[:-1], instanceVals[:-1], self.graph)
             Px-y = prod(Pxi_parents)
             pred_p = Py * Px-y / Px
             posteriors.append((y, true_y, pred_p))

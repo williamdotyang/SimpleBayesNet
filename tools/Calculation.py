@@ -48,6 +48,25 @@ def calcCondProb(data, X, v, Y, y, m = 1):
     denominator = calcProb(data, Y, y, m)
     return numerator / denominator
 
+##
+# Calculates the conditional probability of each observed attribute variable given its parent nodes.
+# @param data  A Data object defined in Data class.
+# @param X  A list of variables. Must be discrete.
+# @param v  A list of values for each of the variables in X.
+# @param graph  A graph structure describing the dependency relation among variables in X.
+# @return Prodcut of P(X_i = x_i | Pa(xi)), for X_i in X
+def calcProbsCondParents(data, X, x, graph):
+    results = []
+    for name in X:
+        node = graph.getNode(name)
+        parentNodes = node.getParents()
+        parentNames = [p.getId() for p in parentNodes]
+        parentValues = [x[data.getColIndex([p])] for p in parentNames]
+        Xvalue = x[data.getColIndex([name])]
+        condProb = calcCondProb(data, [name], [Xvalue], parentNames, parentValues)
+        results.append(condProb)
+    return prod(results)
+
 
 ## 
 # Calculates the conditional mutial information of I(Xi,Xj).

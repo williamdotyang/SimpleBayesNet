@@ -43,7 +43,7 @@ class Data:
 
     ##
     # Get the column index(es) of given variables.
-    # @param variables  A list of variables whose colum indicies are asked
+    # @param variables  A list of names of variables whose colum indicies are asked
     # @return A list of int
     def getColIndex(self, variables):
         indicies = []

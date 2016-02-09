@@ -1,6 +1,7 @@
-from Data import Data
-from Graph import Graph
-from Calculation import *
+from tools.Data import Data
+from tools.Graph import Graph
+from tools.Node import Node
+from tools.Calculation import *
 
 class BayesNet:
     """
@@ -59,7 +60,7 @@ class BayesNet:
             Px = calcProb(self.train, names[:-1], instanceVals[:-1])
             Pxi_parents = calcProbsCondParents(self.train, names[:-1], instanceVals[:-1], self.graph)
             Px_y = prod(Pxi_parents)
-            pred_p = Py * Px_y / Px
+            pred_p = round(Py * Px_y / Px, 12)
             posteriors.append((y, true_y, pred_p))
         return sorted(posteriors, key = lambda x: -x[-1])[0]
 
@@ -72,6 +73,7 @@ class BayesNet:
             results.append(self.predictOneInstance(instance))
         return results
 
+    ## output the result as homework requirement
     def printResults(self):
         results = self.predictTestData()
         # display structures
@@ -90,15 +92,3 @@ class BayesNet:
         print ''
         # display correct predicts
         print str(corrects)
-
-
-if __name__ == '__main__':
-    # test code
-    naive = BayesNet()
-    naive.loadTrain('../data/lymph_train.arff')
-    naive.loadTest('../data/lymph_test.arff')
-    naive.buildNaiveBayes()
-    naive.printResults()
-
-
-

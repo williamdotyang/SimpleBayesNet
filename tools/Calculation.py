@@ -3,8 +3,8 @@
 ## probabilities and mutural information.
 ###
 
-from Data import Data
 from __future__ import division
+from Data import Data
 from math import log
 
 

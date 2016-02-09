@@ -53,13 +53,12 @@ class BayesNet:
     def predictOneInstance(self, instanceVals):
         names = self.train.names # including the 'class'
         posteriors = []
-        for y in self.train.variables[response]:
+        for y in self.train.variables['class']:
             # give the actual posterior porbability in the output
             true_y = instanceVals[-1]
             Py = calcProb(self.train, ['class'], [y])
             Px = calcProb(self.train, names[:-1], instanceVals[:-1])
-            Pxi_parents = calcProbsCondParents(self.train, names[:-1], instanceVals[:-1], self.graph)
-            Px_y = prod(Pxi_parents)
+            Px_y = calcProbsCondParents(self.train, names[:-1], instanceVals, self.graph)
             pred_p = round(Py * Px_y / Px, 12)
             posteriors.append((y, true_y, pred_p))
         return sorted(posteriors, key = lambda x: -x[-1])[0]

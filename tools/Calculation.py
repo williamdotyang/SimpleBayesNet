@@ -61,9 +61,9 @@ def calcProbsCondParents(data, X, x, graph):
         node = graph.getNode(name)
         parentNodes = node.getParents()
         parentNames = [p.getId() for p in parentNodes]
-        parentValues = [x[data.getColIndex([p])] for p in parentNames]
-        Xvalue = x[data.getColIndex([name])]
-        condProb = calcCondProb(data, [name], [Xvalue], parentNames, parentValues)
+        parentValues = [x[i] for i in data.getColIndex(parentNames)]
+        Xvalue = [x[i] for i in data.getColIndex([name])]
+        condProb = calcCondProb(data, [name], Xvalue, parentNames, parentValues)
         results.append(condProb)
     return prod(results)
 

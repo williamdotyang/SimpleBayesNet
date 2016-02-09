@@ -58,8 +58,8 @@ class BayesNet:
             Py = calcProb(self.train, ['class'], [y])
             Px = calcProb(self.train, names[:-1], instanceVals[:-1])
             Pxi_parents = calcProbsCondParents(self.train, names[:-1], instanceVals[:-1], self.graph)
-            Px-y = prod(Pxi_parents)
-            pred_p = Py * Px-y / Px
+            Px_y = prod(Pxi_parents)
+            pred_p = Py * Px_y / Px
             posteriors.append((y, true_y, pred_p))
         return sorted(posteriors, key = lambda x: -x[-1])[0]
 
@@ -71,3 +71,34 @@ class BayesNet:
         for instance in self.test.data:
             results.append(self.predictOneInstance(instance))
         return results
+
+    def printResults(self):
+        results = self.predictTestData()
+        # display structures
+        for attr in self.train.names[:-1]:
+            node = self.graph.getNode(attr)
+            parentNodes = node.getParents()
+            parentNames = [p.getId() for p in parentNodes]
+            print attr + ' ' + ' '.join(parentNames)
+        print ''
+        # display predicts
+        corrects = 0
+        for r in results:
+            if r[0] == r[1]:
+                corrects += 1
+            print ' '.join([str(x) for x in r])
+        print ''
+        # display correct predicts
+        print str(corrects)
+
+
+if __name__ == '__main__':
+    # test code
+    naive = BayesNet()
+    naive.loadTrain('../data/lymph_train.arff')
+    naive.loadTest('../data/lymph_test.arff')
+    naive.buildNaiveBayes()
+    naive.printResults()
+
+
+

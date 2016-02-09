@@ -103,8 +103,8 @@ def calcCondMI(data, Xi, Xj, Y, m = 1):
         for xi in vals_i:
             for xj in vals_j:
                 Pijy = calcProb(data, [Xi, Xj, Y], [xi, xj, y], m)
-                Pij-y = calcCondProb(data, [Xi, Xj], [Y], [xi, xj], [y], m)
-                Pi-y = calcCondProb(data, [Xi], [xi], [Y], [y], m)
-                Pj-y = calcCondProb(data, [Xj], [xj], [Y], [y], m)
-                MI += Pijy * log(Pij-y / (Pi-y * Pj-y), 2)
+                Pij_y = calcCondProb(data, [Xi, Xj], [Y], [xi, xj], [y], m)
+                Pi_y = calcCondProb(data, [Xi], [xi], [Y], [y], m)
+                Pj_y = calcCondProb(data, [Xj], [xj], [Y], [y], m)
+                MI += Pijy * log(Pij_y / (Pi_y * Pj_y), 2)
     return MI

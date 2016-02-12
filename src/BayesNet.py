@@ -2,6 +2,7 @@ from tools.Data import Data
 from tools.Graph import Graph
 from tools.Node import Node
 from tools.Calculation import *
+import Queue as Q
 
 class BayesNet:
     """
@@ -39,12 +40,37 @@ class BayesNet:
         nodes = self.graph.getNodes()
         for node in nodes:
             if node != 'class':
-                self.graph.addEdge('class', node)
+                self.graph.addEdge('class', node.getId())
 
     ##
-    # Build the graph structure of TAN
+    # Build the graph structure of TAN, using Prim's algo.
+    # Every element in priority queue is (score, to_node, frm_node), where
+    # score = (-CMI, colIndex(frm), colIndex(to))
+    # to_node is current node object
+    # frm_node is the parent node which has edge frm_node -> to_node, with score
     def buildTAN(self):
-        pass
+        self.buildNaiveBayes() # first make a Naive Bayes structure
+        pri_q = Q.PriorityQueue()
+        rootNode  = self.graph.getNode(self.data.names[0]) # first attribute
+        pri_q.put( (0,0,0), rootNode, Node(None) ) # frm is a dummy node
+        visited = set() # a set of visited nodes' names
+        while not pri_q.empty():
+            item = pri_q.get() # top element stored in priority queue
+            score = item[0]
+            currNode = item[1] # current node object
+            currName = currNode.getId()
+            frmNode = item[2] # frm node object
+            frmName = frmNode.getId()
+            self.graph.addEdge(frmNode, currName, score)
+            visited.add(currName)
+            for attrName in self.data.names:
+                if attrName in visited: pass
+                CMI = calcCondMI(self.train, currName, attrName, 'class')
+                indexes = self.data.colIndex([currName, attrName])
+                score = (-CMI, indexes[0], indexes[1])
+                nextNode = self.graph.getNode(attrName)
+                pri_q.put(score, nextNode)
+
 
     ##
     # Given the values of attributes of a testing instance, predict its class.

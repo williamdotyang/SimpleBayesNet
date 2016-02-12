@@ -12,7 +12,7 @@ class Node:
         self.__parents = {} # this node's parent nodes {node: weight}
         self.__children = {} # this node's children nodes {node: weight}
 
-    ## overrided string representation about this node
+    ## overrided __str__ method, string representation about this node
     def __str__(self):
         return str(self.__id) + \
         ' parents:' + str([(x.__id, self.__parents[x]) for x in self.__parents]) + \
@@ -51,3 +51,4 @@ class Node:
     ## getter fucn for __children
     def getChildren(self):
         return self.__children
+

@@ -13,9 +13,9 @@ class Graph:
     def __iter__(self):
         return iter(self.__nodes.values())
 
-    ## return a list of names of all nodes
+    ## return a list of all node objects
     def getNodes(self):
-        return self.__nodes.keys()
+        return self.__nodes.values()
 
     ##
     # @param name  A string of name of a node
@@ -103,6 +103,7 @@ if __name__ == '__main__':
     g.addNode('X1')
     g.addNode('X2')
     g.addNode('X3')
+    g.addEdge('Y', None, 1)
     g.addEdge('Y', 'X1', 1)
     g.addEdge('Y', 'X2', 2)
     g.addEdge('Y', 'X3', 3)

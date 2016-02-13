@@ -113,7 +113,7 @@ class BayesNet:
             parentIndexes = sorted([self.train.getColIndex([p.getId()])[0] \
                                 for p in parentNodes])
             parentNames = [self.train.names[i] for i in parentIndexes]
-            print attr + ' ' + ' '.join(parentNames)
+            print attr + ' ' + ' '.join(parentNames) + ' '
         print ''
         # display predicts
         corrects = 0
@@ -124,3 +124,4 @@ class BayesNet:
         print ''
         # display correct predicts
         print str(corrects)
+        print ''

@@ -46,7 +46,7 @@ def calcProb(data, X, v, m = 1):
 def calcCondProb(data, X, v, Y, y, m = 1):
     numerator = data.countInstances(X + Y, v + y) + m
     denominator = data.countInstances(Y, y) + \
-        m * sum([len(data.variables[x]) for x in X])
+        m * prod([len(data.variables[x]) for x in X])
     return numerator / denominator
 
 ##
@@ -85,7 +85,7 @@ def calcMI(data, Xi, Xj, m = 1):
             Pij = calcProb(data, [Xi, Xj], [xi, xj], m)
             Pi = calcProb(data, [Xi], [xi], m)
             Pj = calcProb(data, [Xj], [xj], m)
-            MI += Pij * log(Pxy / (Pi * Pj), 2)
+            MI += Pij * log(Pij / (Pi * Pj), 2.0)
     return MI
 
 
@@ -105,8 +105,23 @@ def calcCondMI(data, Xi, Xj, Y, m = 1):
         for xi in vals_i:
             for xj in vals_j:
                 Pijy = calcProb(data, [Xi, Xj, Y], [xi, xj, y], m)
-                Pij_y = calcCondProb(data, [Xi, Xj], [Y], [xi, xj], [y], m)
+                Pij_y = calcCondProb(data, [Xi, Xj], [xi, xj], [Y], [y], m)
                 Pi_y = calcCondProb(data, [Xi], [xi], [Y], [y], m)
                 Pj_y = calcCondProb(data, [Xj], [xj], [Y], [y], m)
                 MI += Pijy * log(Pij_y / (Pi_y * Pj_y), 2)
     return MI
+
+
+if __name__ == '__main__':
+    # test code
+    data = Data('data/lymph_train.arff')
+    data.parse()
+    for x_val in data.variables['lymphatics']:
+        for y_val in data.variables['class']:
+            print x_val, y_val, calcCondProb(data, ['lymphatics'], [x_val], ['class'], [y_val])
+
+    print calcProb(data, ['class', 'lymphatics'], ['malign_lymph', 'arched'])
+    print calcMI(data, 'lymphatics', 'class')
+    print calcMI(data, 'class', 'lymphatics')
+    print calcCondMI(data, 'lymphatics', 'block_of_affere', 'class')
+

@@ -51,25 +51,26 @@ class BayesNet:
     def buildTAN(self):
         self.buildNaiveBayes() # first make a Naive Bayes structure
         pri_q = Q.PriorityQueue()
-        rootNode  = self.graph.getNode(self.data.names[0]) # first attribute
-        pri_q.put( (0,0,0), rootNode, Node(None) ) # frm is a dummy node
+        rootNode  = self.graph.getNode(self.train.names[0]) # first attribute
+        pri_q.put( ((0,0,0), rootNode, Node(None)) ) # frm is a dummy node
         visited = set() # a set of visited nodes' names
-        while not pri_q.empty():
+        while (not pri_q.empty()) and (len(visited) < self.train.names):
             item = pri_q.get() # top element stored in priority queue
             score = item[0]
             currNode = item[1] # current node object
             currName = currNode.getId()
+            if currName in visited: continue
             frmNode = item[2] # frm node object
             frmName = frmNode.getId()
-            self.graph.addEdge(frmNode, currName, score)
+            self.graph.addEdge(frmName, currName, score)
             visited.add(currName)
-            for attrName in self.data.names:
-                if attrName in visited: pass
-                CMI = calcCondMI(self.train, currName, attrName, 'class')
-                indexes = self.data.colIndex([currName, attrName])
-                score = (-CMI, indexes[0], indexes[1])
-                nextNode = self.graph.getNode(attrName)
-                pri_q.put(score, nextNode)
+            for attrName in self.train.names:
+                if attrName not in visited:
+                    CMI = calcCondMI(self.train, currName, attrName, 'class')
+                    indexes = self.train.getColIndex([currName, attrName])
+                    score = (-CMI, indexes[0], indexes[1])
+                    nextNode = self.graph.getNode(attrName)
+                    pri_q.put((score, nextNode, currNode))
 
 
     ##
@@ -109,7 +110,9 @@ class BayesNet:
         for attr in self.train.names[:-1]:
             node = self.graph.getNode(attr)
             parentNodes = node.getParents()
-            parentNames = [p.getId() for p in parentNodes]
+            parentIndexes = sorted([self.train.getColIndex([p.getId()])[0] \
+                                for p in parentNodes])
+            parentNames = [self.train.names[i] for i in parentIndexes]
             print attr + ' ' + ' '.join(parentNames)
         print ''
         # display predicts

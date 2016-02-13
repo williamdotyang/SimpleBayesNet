@@ -8,16 +8,14 @@ if __name__ == '__main__':
 
     trainFilename, testFilename, method = sys.argv[1:]
 
+    model = BayesNet.BayesNet()
+    model.loadTrain(trainFilename)
+    model.loadTest(testFilename)
+
     if method == 'n':
-        naive = BayesNet.BayesNet()
-        naive.loadTrain(trainFilename)
-        naive.loadTest(testFilename)
-        naive.buildNaiveBayes()
-        naive.printResults()
+        model.buildNaiveBayes()
 
     if method == 't':
-        tan = BayesNet.BayesNet()
-        tan.loadTrain(trainFilename)
-        tan.loadTest(testFilename)
-        tan.buildTAN()
-        tan.printResults()
+        model.buildTAN()
+    
+    model.printResults()

@@ -2,7 +2,7 @@ from src import BayesNet
 import sys
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3: 
+    if len(sys.argv) != 4: 
         sys.stderr('trainFile testFile learningMethod')
         sys.exit()
 

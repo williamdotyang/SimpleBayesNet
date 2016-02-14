@@ -47,7 +47,7 @@ def getAverageAccuracy(trainFilename, testFilename, n, flag):
         for r in results:
             if r[0] == r[1]:
                 count += 1
-        #print count / total
+        print count / total
         accuracy.append(count / total)
 
     return (n, sum(accuracy) / len(accuracy))

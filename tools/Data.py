@@ -1,3 +1,5 @@
+import re
+
 class Data:
     """ A class representation of dataset, either training or testing.
         All the variables are discrete, and class variable is binary.
@@ -19,7 +21,7 @@ class Data:
     # Reads a file and set some fields with data structures for easier access.
     def parse(self):
         for line in open(self.filename):
-            line = line.rstrip('\n')
+            line = line.rstrip('\n\r')
             if line[0] == '%':
                 pass
             elif line[0] == '@':
@@ -27,9 +29,9 @@ class Data:
                 if tokens[0] == "@attribute":
                     attribute = tokens[1].strip("'")
                     self.names.append(attribute)
-                    self.variables[attribute] = tokens[2].strip("{ }").split(', ')
+                    self.variables[attribute] = re.split(', *', tokens[2].strip("{ }"))
             else: # data lines
-                self.data.append(line.split(','))        
+                self.data.append(line.split(','))
 
     ##
     # Get the number of variables in this data set.
@@ -76,8 +78,8 @@ class Data:
 
 if __name__ == '__main__':
     # test code
-    lym_train = Data('../data/lymph_train.arff')
+    lym_train = Data('TESTCASES_BACKUP/Case2.train')
     lym_train.parse()
     print lym_train.filename + ' has ' + str(lym_train.getNumNames()) + ' variables; ' + \
         str(lym_train.getNumInstances()) + ' instances.'
-    print 'it has ' + str(lym_train.countInstances(['class'], ['malign_lymph'])) + ' cases of malign_lymph.'
+    print 'it has ' + str(lym_train.countInstances(['class'], ['1'])) + ' cases of positive.'
